@@ -1,4 +1,11 @@
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {postLogin} from '../../redux/actions/todos';
@@ -7,10 +14,8 @@ import {LOADING} from '../../constants/actionTypes';
 export default function Login({navigation}) {
   const dispatch = useDispatch();
   const {auth, loading} = useSelector(state => state);
-  console.log(loading);
   const [formData, setFormData] = useState({email: '', password: ''});
   function login() {
-    dispatch({type: LOADING, payload: !loading.loading});
     dispatch(postLogin(formData, navigation));
   }
   return (
@@ -27,7 +32,7 @@ export default function Login({navigation}) {
         }
       />
       <Button onPress={login} title="masuk" />
-      {/* <Text>{token}</Text> */}
+      {loading.loading && <ActivityIndicator size="large" />}
       <Button
         onPress={() => navigation.navigate('Register')}
         title="register"

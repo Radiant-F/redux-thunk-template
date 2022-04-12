@@ -10,11 +10,12 @@ export default function Todos() {
       <TodoForm />
       <Text>Todos</Text>
       {todos.length == 0 && <ActivityIndicator size="large" />}
-      {/* {todos.map(value => (
+      {todos.map(value => (
         <View key={value.id}>
-          <Text>{value.task}</Text>
+          <Text style={{color: 'black'}}>{value.task}</Text>
+          <Text>{value.desc}</Text>
         </View>
-      ))} */}
+      ))}
     </View>
   );
 }

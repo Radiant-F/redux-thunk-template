@@ -1,18 +1,39 @@
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {useDispatch, useSelector} from 'react-redux';
+import {postTodo} from '../../../redux/actions/todos';
+import axios from 'axios';
 
 export default function TodoForm() {
+  const {auth, loading} = useSelector(state => state);
+  const dispatch = useDispatch();
+  const [image, setImage] = useState();
   const [formData, setFormData] = useState({
     task: '',
     desc: '',
-    image: '',
     is_done: 0,
   });
 
   async function pickImage() {
     const {assets} = await launchImageLibrary({mediaType: 'photo'});
-    if (assets) return setFormData(state => ({...state, image: assets[0].uri}));
+    console.log(assets);
+    if (assets) {
+      setImage(assets[0]);
+      setFormData(state => ({...state, image: assets[0].uri}));
+    }
+  }
+
+  async function submitTodo() {
+    dispatch(postTodo(image, formData, auth.token));
   }
 
   return (
@@ -27,6 +48,9 @@ export default function TodoForm() {
         onChangeText={input => setFormData(state => ({...state, desc: input}))}
         value={formData.desk}
       />
+      {image && (
+        <Image source={{uri: image.uri}} style={{width: 100, height: 100}} />
+      )}
       <Button title="image" onPress={pickImage} />
       <Button
         title={`is_done: ${formData.is_done == 1 ? 'done' : 'undone'}`}
@@ -37,7 +61,8 @@ export default function TodoForm() {
           }))
         }
       />
-      <Button title="submit" onPress={() => console.log(formData)} />
+      <Button title="submit" onPress={submitTodo} />
+      {loading.loading && <ActivityIndicator size="large" />}
     </View>
   );
 }

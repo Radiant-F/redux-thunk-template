@@ -5,6 +5,7 @@ export default (todos = [], action) => {
     case FETCH_ALL:
       return action.payload;
     case CREATE:
+      console.log('CREATE:', action.payload);
       return todos;
     default:
       return todos;
